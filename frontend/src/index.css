@@ -1,0 +1,24 @@
+/* [Experiment 1] Build responsive and interactive UIs using Tailwind CSS */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-slate-50 text-slate-800 antialiased;
+  }
+}
+
+/* Custom interactive parking slot pulse animation */
+@keyframes slotPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+}
+
+.slot-active-pulse {
+  animation: slotPulse 2s infinite ease-in-out;
+}

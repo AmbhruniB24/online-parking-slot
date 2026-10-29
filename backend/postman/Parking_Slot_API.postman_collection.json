@@ -1,0 +1,175 @@
+{
+  "info": {
+    "name": "SmartPark - Online Parking Slot API Collection (Exp 7)",
+    "_postman_id": "a8f5b492-93c4-4b51-b847-smartpark777",
+    "description": "Automated test suite for validating RESTful APIs in Experiment 7",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. User Login (Driver)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200 OK\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test(\"Token is returned and saved\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.success).to.eql(true);",
+              "    pm.expect(jsonData.data.token).to.be.a('string');",
+              "    pm.environment.set(\"driver_token\", jsonData.data.token);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"driver@smartpark.com\",\n  \"password\": \"driver123\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/auth/login",
+          "host": ["{{base_url}}"],
+          "path": ["api", "auth", "login"]
+        }
+      }
+    },
+    {
+      "name": "2. Get All Parking Slots",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200 OK\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test(\"Slots array is returned\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.data).to.be.an('array');",
+              "    if(jsonData.data.length > 0) {",
+              "        var availableSlot = jsonData.data.find(s => s.status === 'available');",
+              "        if(availableSlot) {",
+              "            pm.environment.set(\"available_slot_id\", availableSlot._id);",
+              "        }",
+              "    }",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/slots",
+          "host": ["{{base_url}}"],
+          "path": ["api", "slots"]
+        }
+      }
+    },
+    {
+      "name": "3. Book a Parking Slot",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 201 Created\", function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "pm.test(\"Booking confirmed with valid ticket code\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.success).to.eql(true);",
+              "    var booking = jsonData.booking || jsonData.data;",
+              "    pm.expect(booking.ticketCode).to.be.a('string');",
+              "    pm.environment.set(\"booking_id\", booking._id);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{driver_token}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"slotId\": \"{{available_slot_id}}\",\n  \"vehicleNumber\": \"MH02CD4567\",\n  \"durationHours\": 2\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/bookings",
+          "host": ["{{base_url}}"],
+          "path": ["api", "bookings"]
+        }
+      }
+    },
+    {
+      "name": "4. Get My Bookings",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200 OK\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{driver_token}}" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/bookings/my-bookings",
+          "host": ["{{base_url}}"],
+          "path": ["api", "bookings", "my-bookings"]
+        }
+      }
+    },
+    {
+      "name": "5. Vacate Parking Slot",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200 OK\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{driver_token}}" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/bookings/{{booking_id}}/vacate",
+          "host": ["{{base_url}}"],
+          "path": ["api", "bookings", "{{booking_id}}", "vacate"]
+        }
+      }
+    }
+  ]
+}
