@@ -1,4 +1,4 @@
-# [Experiment 9] CI/CD Deployment with GitHub Actions + Render/Vercel
+docker compose logs --tail=50docker compose logs --tail=50# [Experiment 9] CI/CD Deployment with GitHub Actions + Render/Vercel
 name: SmartPark CI/CD Pipeline
 
 on:
