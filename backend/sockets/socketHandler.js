@@ -1,12 +1,21 @@
+
 let ioInstance = null;
 
 const initSocket = (server) => {
   const { Server } = require('socket.io');
 
+  const allowedOrigins = (
+    process.env.CLIENT_URL || 'http://localhost:5173'
+  )
+    .split(',')
+    .map(origin => origin.trim())
+    .filter(Boolean);
+
   ioInstance = new Server(server, {
     cors: {
-      origin: process.env.CLIENT_URL || 'http://localhost:5173',
-      methods: ['GET', 'POST', 'PUT', 'DELETE']
+      origin: allowedOrigins,
+      methods: ['GET', 'POST'],
+      credentials: true
     }
   });
 
