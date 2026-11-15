@@ -1,4 +1,7 @@
-// [Experiment 5 & 8] Production-Ready Express Server with Helmet, Rate Limiter, and Socket.IO
+
+// SmartPark - Production Express Server
+// Experiments 5 & 8: Security, Rate Limiting and Socket.IO
+
 require('dotenv').config();
 
 const http = require('http');
@@ -18,53 +21,88 @@ const bookingRoutes = require('./routes/bookingRoutes');
 const app = express();
 const server = http.createServer(app);
 
-// Security Headers
+// Trust Render reverse proxy
+app.set('trust proxy', 1);
+
+// Allowed frontend origins
+// Render CLIENT_URL can contain comma-separated URLs
+const allowedOrigins = (
+  process.env.CLIENT_URL || 'http://localhost:5173'
+)
+  .split(',')
+  .map(origin => origin.trim())
+  .filter(Boolean);
+
+// Security headers
 app.use(helmet());
 
-// CORS configuration for local React Vite & deployment
+// CORS configuration
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:5173',
-  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    return callback(new Error('CORS: Origin not allowed'));
+  },
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   credentials: true
 }));
 
+// Parse JSON requests
 app.use(express.json());
 
-// Apply rate limiter to /api
+// Rate limiter for API routes
 app.use('/api', apiLimiter);
 
-// [Experiment 8] Initialize Socket.IO
+// Initialize Socket.IO
 initSocket(server);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
-  res.json({
+  res.status(200).json({
     status: 'healthy',
     project: 'SmartPark - Online Parking Slot Booking System',
     timestamp: new Date().toISOString()
   });
 });
 
-// Mount Routes
+// API routes
 app.use('/api/auth', authRoutes);
 app.use('/api/slots', slotRoutes);
 app.use('/api/bookings', bookingRoutes);
 
-// Central Error Handler
+// Central error handler
 app.use(errorHandler);
 
+// Render provides PORT automatically
 const PORT = process.env.PORT || 5000;
 
+// Start server after database connection
 async function startServer() {
-  await connectDB();
+  try {
+    await connectDB();
 
-  server.listen(PORT, () => {
-    console.log(`=======================================================`);
-    console.log(`🚀 SmartPark Backend Server listening on port ${PORT}`);
-    console.log(`⚡ WebSocket Engine (Socket.IO) ready for live slot sync`);
-    console.log(`📧 Official Email Notification Engine: Active (Gmail SMTP: ${process.env.SMTP_USER})`);
-    console.log(`=======================================================`);
-  });
+    server.listen(PORT, () => {
+      console.log('==============================================');
+      console.log('SmartPark Backend Server Started');
+      console.log(`Server running on port ${PORT}`);
+      console.log('MongoDB connection initialized');
+      console.log('Socket.IO initialized');
+      console.log(
+        `Gmail SMTP: ${
+          process.env.GMAIL_USER || process.env.SMTP_USER
+            ? 'Configured'
+            : 'Not configured'
+        }`
+      );
+      console.log('Allowed frontend origins:', allowedOrigins);
+      console.log('==============================================');
+    });
+  } catch (error) {
+    console.error('SmartPark server startup failed:', error);
+    process.exit(1);
+  }
 }
 
 startServer();
