@@ -65,4 +65,47 @@ const authorize = (...roles) => {
   };
 };
 
-module.exports = { protect, authorize };
+// Optional JWT verification: attaches user if token provided, but allows guest operations
+const optionalProtect = async (req, res, next) => {
+  let token;
+  const authHeader = req.headers.authorization;
+
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    try {
+      token = authHeader.split(' ')[1];
+      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'smartpark_super_secret_jwt_key_2026');
+
+      let user = null;
+      if (isDBConnected()) {
+        try {
+          user = await User.findById(decoded.id).select('-password');
+        } catch (dbErr) {
+          // ignore
+        }
+      }
+
+      if (!user) {
+        user = memoryUsers.find(u => String(u._id) === String(decoded.id) || u.email === decoded.email);
+      }
+
+      if (!user && decoded.id) {
+        user = {
+          _id: decoded.id,
+          id: decoded.id,
+          name: decoded.name || 'User',
+          email: decoded.email,
+          role: decoded.role || 'driver'
+        };
+      }
+
+      req.user = user || null;
+    } catch (error) {
+      req.user = null;
+    }
+  } else {
+    req.user = null;
+  }
+  next();
+};
+
+module.exports = { protect, optionalProtect, authorize };

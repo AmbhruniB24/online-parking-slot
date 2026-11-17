@@ -115,7 +115,7 @@ export default function BookingModal({
   const handleExecutePayment = async () => {
     setIsSubmitting(true);
     setErrorMessage('');
-    dispatch(setStep(3)); // Step 3: High-tech processing animation
+    dispatch(setStep(3)); // Step 3: Fast processing animation
 
     const payload = {
       slotId: selectedSlot._id || selectedSlot.slotNumber,
@@ -131,8 +131,11 @@ export default function BookingModal({
       paymentMethod: paymentMethod || 'upi'
     };
 
+    const postPromise = api.post('/bookings', payload, { timeout: 6000 });
+    const delayPromise = new Promise(resolve => setTimeout(resolve, 600));
+
     try {
-      const response = await api.post('/bookings', payload);
+      const [response] = await Promise.all([postPromise, delayPromise]);
       const bookedData = response.data.booking;
       const notifData = response.data.notifications;
 
@@ -152,7 +155,7 @@ export default function BookingModal({
       }));
 
     } catch (err) {
-      console.warn('Backend in offline fallback mode:', err.message);
+      console.warn('Booking API fallback:', err.message);
 
       const fallbackTicket = `SP-${new Date().getFullYear()}-${Math.random().toString(36).substring(2, 7).toUpperCase()}`;
       const fallbackBooking = {
@@ -182,6 +185,14 @@ export default function BookingModal({
       }));
 
       onPassCreated?.(fallbackBooking);
+
+      window.dispatchEvent(new CustomEvent('smartpark_slot_booked', {
+        detail: {
+          slotId: selectedSlot._id || selectedSlot.slotNumber,
+          slotNumber: selectedSlot.slotNumber,
+          status: 'occupied'
+        }
+      }));
     } finally {
       setIsSubmitting(false);
     }
@@ -632,9 +643,9 @@ export default function BookingModal({
                   <Car className="w-8 h-8" />
                 </div>
               </div>
-              <h4 className="text-base font-black text-white">Authorizing Payment & Locking Parking Bay</h4>
+              <h4 className="text-base font-black text-white">Confirming Reservation & Sending Mail...</h4>
               <p className="text-xs text-slate-400 max-w-sm mx-auto">
-                Communicating with gateway and dispatching digital invoice email via Gmail SMTP to {email}...
+                Sending mail to {email}...
               </p>
             </div>
           )}

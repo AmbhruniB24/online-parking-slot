@@ -9,9 +9,9 @@ const {
   vacateBooking
 } = require('../controllers/bookingController');
 
-const { protect, authorize } = require('../middlewares/authMiddleware');
+const { protect, optionalProtect, authorize } = require('../middlewares/authMiddleware');
 
-router.post('/', protect, createBooking);
+router.post('/', optionalProtect, createBooking);
 router.get('/my-bookings', protect, getMyBookings);
 router.get('/', protect, authorize('admin'), getAllBookings);
 router.put('/:bookingId/vacate', protect, vacateBooking);

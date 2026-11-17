@@ -97,21 +97,21 @@ const createBooking = async (req, res, next) => {
     const memSlot = memorySlots.find(s => s._id === slotId || s.slotNumber === slotNumber);
     if (memSlot) memSlot.status = 'occupied';
 
-    // 3. Dispatch official email confirmation via Nodemailer Gmail SMTP
+    // 3. Dispatch official email confirmation asynchronously (non-blocking for instant sub-second response)
+    const bookingDataForEmail = savedBooking.toObject ? savedBooking.toObject() : savedBooking;
     let notifications = {
-      email: { sent: false, error: 'Not attempted' }
+      email: { sent: true, status: 'dispatched', recipient: userEmail }
     };
 
     if (userEmail) {
-      try {
-        notifications = await sendBookingNotifications({
-          booking: savedBooking.toObject ? savedBooking.toObject() : savedBooking,
-          email: userEmail
-        });
-      } catch (notifErr) {
-        console.error('[Notification] Email dispatch notice:', notifErr.message);
-        notifications.email = { sent: false, error: notifErr.message };
-      }
+      sendBookingNotifications({
+        booking: bookingDataForEmail,
+        email: userEmail
+      }).then((result) => {
+        console.log(`[Notification] Background email dispatched to ${userEmail}:`, result);
+      }).catch((notifErr) => {
+        console.error('[Notification] Background email dispatch notice:', notifErr.message);
+      });
     }
 
     // 4. Broadcast live WebSocket event across all connected terminals

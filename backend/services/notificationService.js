@@ -197,16 +197,14 @@ async function sendEmail(email, booking) {
 
   try {
     const transporter = nodemailer.createTransport({
-      host: SMTP_HOST,
-      port: Number(SMTP_PORT),
-      secure: Number(SMTP_PORT) === 465,
+      service: 'gmail',
       auth: {
         user: SMTP_USER,
         pass: SMTP_PASS
       },
-      tls: {
-        rejectUnauthorized: false
-      }
+      connectionTimeout: 10000,
+      greetingTimeout: 5000,
+      socketTimeout: 15000
     });
 
     const subject = `Parking Pass Confirmed: Bay ${booking.slotNumber || 'Reserved'} (${booking.ticketCode || 'SP-PASS'})`;
