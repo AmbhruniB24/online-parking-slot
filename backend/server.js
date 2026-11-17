@@ -71,6 +71,28 @@ app.get('/api/health', (req, res) => {
     });
 });
 
+app.get('/api/test-email', async (req, res) => {
+    const { sendEmail } = require('./services/notificationService');
+    const targetEmail = req.query.email || 'ambhrunibhakte1@gmail.com';
+    try {
+        const result = await sendEmail(targetEmail, {
+            ticketCode: `SP-${new Date().getFullYear()}-DEMO`,
+            slotNumber: 'A-01',
+            floor: 1,
+            locationName: 'SmartPark Central Parking Facility',
+            vehicleNumber: 'MH 01 AB 1234',
+            vehicleType: '4-wheeler',
+            durationHours: 1,
+            totalAmount: 60,
+            paymentMethod: 'UPI',
+            transactionId: `TXN-${Date.now().toString().slice(-6)}`
+        });
+        return res.json({ success: true, targetEmail, result });
+    } catch (err) {
+        return res.status(500).json({ success: false, targetEmail, error: err.message });
+    }
+});
+
 app.use('/api/auth', authRoutes);
 app.use('/api/slots', slotRoutes);
 app.use('/api/bookings', bookingRoutes);

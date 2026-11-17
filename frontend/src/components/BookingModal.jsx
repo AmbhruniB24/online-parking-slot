@@ -730,27 +730,6 @@ export default function BookingModal({
                 </div>
               </div>
 
-              {/* [Experiment 8] EMAIL DISPATCH CONFIRMATION CARD */}
-              <div className="p-4 rounded-2xl bg-blue-950/40 border border-blue-500/40 flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-md">
-                    <Mail className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <div className="flex items-center space-x-1.5">
-                      <span className="text-sm font-black text-white">Official Pass Sent via Email</span>
-                      <CheckCheck className="w-4 h-4 text-cyan-400" />
-                    </div>
-                    <p className="text-xs text-slate-300">
-                      Dispatched with QR barcode & tax invoice to: <strong>{email || user?.email}</strong>
-                    </p>
-                  </div>
-                </div>
-                <span className="text-[10px] font-black uppercase tracking-wider bg-blue-900/80 text-blue-300 px-2.5 py-1 rounded-lg border border-blue-700">
-                  Gmail SMTP
-                </span>
-              </div>
-
               {/* Close Button */}
               <button
                 type="button"
