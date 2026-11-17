@@ -20,8 +20,8 @@ export default function HowItWorks() {
     },
     {
       step: '03',
-      title: 'Auto WhatsApp & Park',
-      desc: 'Get instant WhatsApp confirmation with digital QR ticket. Approach boom barrier for automatic optical recognition & entry.',
+      title: 'Instant Pass & Park',
+      desc: 'Get instant official email confirmation with digital QR ticket. Approach boom barrier for automatic optical recognition & entry.',
       icon: <QrCode className="w-6 h-6 text-emerald-400" />,
       color: 'bg-emerald-950/60 text-emerald-400 border-emerald-800'
     }

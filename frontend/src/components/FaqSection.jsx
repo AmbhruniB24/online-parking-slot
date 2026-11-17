@@ -11,8 +11,8 @@ export default function FaqSection() {
       a: 'The entry barrier is equipped with high-resolution ANPR (Automatic Number Plate Recognition) cameras. When you drive up to the barrier, the camera scans your vehicle plate, matches it with your active reservation, and lifts the boom automatically in under 1.2 seconds. Alternatively, you can scan your digital pass QR code on the kiosk scanner.'
     },
     {
-      q: 'How does the direct WhatsApp pass notification work?',
-      a: 'Upon completing your reservation, our automated system generates a formal English confirmation ticket containing your Ticket ID, Bay Number, Floor, Vehicle Number, and Entry Barcode. The message is immediately queued for direct WhatsApp delivery and can also be opened instantly via the 1-click WhatsApp launcher.'
+      q: 'How does the direct email pass notification work?',
+      a: 'Upon completing your reservation, our automated system generates a formal English confirmation ticket containing your Ticket ID, Bay Number, Floor, Vehicle Number, and Entry Barcode QR. The message is immediately dispatched to your verified email address via Nodemailer SMTP.'
     },
     {
       q: 'What happens if I run late and arrive after my scheduled entry time?',

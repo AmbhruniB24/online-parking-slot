@@ -13,7 +13,7 @@ export default function PricingSection() {
       features: [
         'Deck Level 2 Access',
         '24/7 CCTV Optical Surveillance',
-        'Direct UPI QR & WhatsApp Pass',
+        'Direct UPI QR & Instant Email Pass',
         '15-Minute Free Grace Period'
       ],
       cta: 'Reserve Bike Bay',
@@ -30,7 +30,7 @@ export default function PricingSection() {
         'Automated ANPR Plate Scanning',
         'Overhead Ultrasonic Sensor Guidance',
         'Guaranteed Bay Lock with Barrier Sync',
-        'Instant WhatsApp Confirmation Pass'
+        'Instant Email Confirmation Pass'
       ],
       cta: 'Reserve Car Bay',
       highlighted: true

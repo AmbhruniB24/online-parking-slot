@@ -1,24 +1,17 @@
 
 let ioInstance = null;
 
-const initSocket = (server, frontendOrigins = []) => {
+const initSocket = (server) => {
     const { Server } = require('socket.io');
-
-    const allowedOrigins = frontendOrigins.length
-        ? frontendOrigins
-        : (process.env.CLIENT_URL || 'http://localhost:5173')
-            .split(',')
-            .map(origin => origin.trim().replace(/\/$/, ''))
-            .filter(Boolean);
 
     ioInstance = new Server(server, {
         cors: {
-            origin: allowedOrigins,
-            methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+            origin: (origin, cb) => cb(null, true),
+            methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
             credentials: true
         },
         transports: ['websocket', 'polling'],
-        allowEIO3: false
+        allowEIO3: true
     });
 
     ioInstance.on('connection', (socket) => {

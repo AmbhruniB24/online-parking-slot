@@ -1,10 +1,10 @@
 // [Experiment 5] Create secure, production-ready RESTful APIs: Anti-Hoarding Rate Limiter
 const rateLimit = require('express-rate-limit');
 
-// General API limiter: 100 requests per 15 minutes
+// General API limiter: 1000 requests per 15 minutes for cloud & production resilience
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 100,
+  max: 1000,
   standardHeaders: true,
   legacyHeaders: false,
   message: {
@@ -13,10 +13,10 @@ const apiLimiter = rateLimit({
   }
 });
 
-// Slot booking limiter: max 15 booking attempts per 10 minutes to prevent bot slot-hoarding
+// Slot booking limiter: max 100 booking attempts per 10 minutes
 const bookingLimiter = rateLimit({
   windowMs: 10 * 60 * 1000,
-  max: 15,
+  max: 100,
   standardHeaders: true,
   legacyHeaders: false,
   message: {

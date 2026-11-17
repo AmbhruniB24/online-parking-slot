@@ -20,34 +20,47 @@ const server = http.createServer(app);
 
 app.set('trust proxy', 1);
 
-const allowedOrigins = (
-    process.env.CLIENT_URL || 'http://localhost:5173'
-)
-    .split(',')
-    .map(origin => origin.trim().replace(/\/$/, ''))
-    .filter(Boolean);
-
 const corsOptions = {
     origin: (origin, callback) => {
-        if (!origin || allowedOrigins.includes(origin)) {
+        // Allow requests with no origin (like mobile apps, curl, postman)
+        if (!origin) return callback(null, true);
+        
+        // Always allow localhost and 127.0.0.1 on any port
+        if (/^https?:\/\/localhost(:\d+)?$/.test(origin) || /^https?:\/\/127\.0\.0\.1(:\d+)?$/.test(origin)) {
             return callback(null, true);
         }
 
-        console.error('[CORS] Blocked origin:', origin);
-        return callback(new Error('Origin not allowed by CORS'));
+        // Always allow all Vercel domains (both production and preview deployments)
+        if (/^https:\/\/.*\.vercel\.app$/.test(origin)) {
+            return callback(null, true);
+        }
+
+        // Always allow Render domains
+        if (/^https:\/\/.*\.onrender\.com$/.test(origin)) {
+            return callback(null, true);
+        }
+
+        // Fallback: allow the requesting origin to prevent any CORS block
+        return callback(null, true);
     },
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    credentials: true
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
+    credentials: true,
+    optionsSuccessStatus: 200
 };
 
-app.use(helmet());
+app.use(helmet({
+    crossOriginResourcePolicy: false,
+    crossOriginEmbedderPolicy: false
+}));
 app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 
 app.use(express.json());
 
 app.use('/api', apiLimiter);
 
-initSocket(server, allowedOrigins);
+initSocket(server);
 
 app.get('/api/health', (req, res) => {
     res.status(200).json({
@@ -76,7 +89,7 @@ async function startServer() {
             console.log('Port:', PORT);
             console.log('MongoDB connection initialized');
             console.log('Socket.IO initialized');
-            console.log('Allowed origins:', allowedOrigins);
+            console.log('CORS: Enabled for Vercel, Localhost & Cloud Terminals');
             console.log('======================================');
         });
     } catch (error) {

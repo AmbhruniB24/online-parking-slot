@@ -10,7 +10,7 @@
 - **Backend:** Node.js, Express.js, MongoDB, Mongoose, Socket.IO
 - **Security & Auth:** JSON Web Tokens (JWT), Bcrypt password hashing, Helmet, Rate Limiter
 - **Payment Gateway:** Multi-channel payment simulation supporting **UPI** (Google Pay, PhonePe, Paytm, BHIM UPI), **Credit & Debit Cards** (Visa, Mastercard, RuPay), and **Net Banking**
-- **Experiment 8 Notifications:** Real-time WebSockets synchronization + **Direct Email (Nodemailer HTML with QR Code) & WhatsApp notifications in proper English**
+- **Experiment 8 Notifications:** Real-time WebSockets synchronization + **Direct Email (Nodemailer HTML with QR Code) notifications in formal English**
 - **DevOps & CI/CD:** GitHub Actions pipeline + Multi-stage Docker Compose orchestration
 
 ---
@@ -26,7 +26,7 @@
 | **5** | **Create secure, production-ready RESTful APIs** | Express rate-limiting to prevent slot-hoarding, `helmet` HTTP headers, centralized error middleware, and input sanitization. |
 | **6** | **Implement authentication and user roles with JWT** | Role-Based Access Control (Driver vs Admin), password hashing with bcrypt, JWT token signing & verification middleware. |
 | **7** | **Validating RESTful APIs using Postman** | Automated Postman collection and environment with assertions for HTTP status codes, JWT extraction, and response schemas. |
-| **8** | **Enable real-time communication via WebSockets & Instant Notifications** | Socket.IO bidirectional sync for instant slot status changes + **Automated direct Email & WhatsApp notifications formatted in formal English**. |
+| **8** | **Enable real-time communication via WebSockets & Instant Notifications** | Socket.IO bidirectional sync for instant slot status changes + **Automated direct Email notifications formatted in formal English with QR Ticket**. |
 | **9** | **CI/CD Deployment with GitHub Actions + Render/Vercel** | GitHub Actions pipeline for backend syntax validation, frontend build check, and auto-deployment hooks. |
 | **10** | **Deploy full-stack apps using DevOps tools and Docker** | Multi-stage Dockerfiles for frontend (Nginx) & backend (Node.js) + `docker-compose.yml` to run Frontend, Backend, and MongoDB. |
 
@@ -45,13 +45,11 @@
 
 ---
 
-## 📱 Experiment 8: Direct Email & WhatsApp Notification System
+## 📱 Experiment 8: Direct Email Notification System
 Whenever any parking bay is booked, the system automatically triggers:
-1. **Direct Email (Nodemailer):**
-   - Sends a modern HTML invoice pass directly to the customer's email with QR entry barcode, ticket ID, bay number, duration, amount, and directions.
-2. **Direct WhatsApp Notification:**
-   - Dispatches a polite, formal English message containing ticket pass ID, assigned bay, vehicle reg number, duration, and gate instructions.
-   - Features a **1-click "Open in WhatsApp" button** (`https://wa.me/...`) in the booking confirmation modal and pass details.
+1. **Direct Email (Nodemailer Gmail SMTP):**
+   - Sends a modern HTML invoice pass directly to the customer's email (`ambhrunibhakte1@gmail.com`) with QR entry barcode, ticket ID, bay number, duration, amount, and gate guidelines in formal English.
+   - Operates in real-time alongside Socket.IO live dashboard events.
 
 ---
 

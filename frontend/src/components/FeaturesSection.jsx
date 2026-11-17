@@ -16,8 +16,8 @@ export default function FeaturesSection() {
     },
     {
       icon: <MessageSquare className="w-6 h-6 text-emerald-400" />,
-      title: 'Instant WhatsApp Pass Dispatch',
-      desc: 'Automated digital QR ticket codes dispatched directly to your WhatsApp mobile with gate barrier entry barcodes.'
+      title: 'Automated Official Email Pass',
+      desc: 'Instant digital QR ticket codes and formatted parking receipts dispatched straight to your verified email inbox.'
     },
     {
       icon: <Zap className="w-6 h-6 text-amber-400" />,
@@ -47,7 +47,7 @@ export default function FeaturesSection() {
           Engineered for Smart Urban Mobility
         </h2>
         <p className="text-sm sm:text-base text-slate-400 mt-2">
-          Combining WebSocket telemetry, relational MongoDB models, and real-time WhatsApp automation.
+          Combining WebSocket telemetry, RESTful MongoDB models, and instant email dispatch.
         </p>
       </div>
 

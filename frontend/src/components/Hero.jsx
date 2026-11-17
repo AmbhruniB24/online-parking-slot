@@ -52,7 +52,7 @@ export default function Hero({ selectedLocation, onOpenLocationModal }) {
                 RESERVATION.
               </h1>
               <p className="text-sm sm:text-base text-slate-300 font-medium max-w-xl leading-relaxed">
-                Autonomous ultrasonic occupancy detection, instant digital QR pass barcodes, and automated WhatsApp ticket dispatch in real-time.
+                Autonomous ultrasonic occupancy detection, instant digital QR pass barcodes, and automated email ticket dispatch in real-time.
               </p>
             </div>
 

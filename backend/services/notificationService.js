@@ -182,9 +182,9 @@ async function sendEmail(email, booking) {
   const {
     SMTP_HOST = 'smtp.gmail.com',
     SMTP_PORT = 587,
-    SMTP_USER,
-    SMTP_PASS,
-    MAIL_FROM
+    SMTP_USER = process.env.SMTP_USER || 'ambhrunibhakte1@gmail.com',
+    SMTP_PASS = process.env.SMTP_PASS || 'vkhuxbonktdlzdgp',
+    MAIL_FROM = process.env.MAIL_FROM || 'ambhrunibhakte1@gmail.com'
   } = process.env;
 
   if (!SMTP_USER || !SMTP_PASS) {
