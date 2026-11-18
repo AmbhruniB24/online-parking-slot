@@ -53,7 +53,7 @@ export default function BookingModal({
 
   // Local state for contact inputs and UI feedback
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState('ambhrunibhakte1@gmail.com');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [selectedBank, setSelectedBank] = useState('HDFC Bank');
@@ -126,12 +126,12 @@ export default function BookingModal({
       vehicleType: vehicleType || selectedSlot.type || '4-wheeler',
       durationHours: Number(durationHours) || 1,
       totalAmount: Number(totalAmount) || 50,
-      email: email.trim(),
+      email: (email && email.trim()) || user?.email || 'ambhrunibhakte1@gmail.com',
       phoneNumber: phoneNumber.trim(),
       paymentMethod: paymentMethod || 'upi'
     };
 
-    const postPromise = api.post('/bookings', payload, { timeout: 6000 });
+    const postPromise = api.post('/bookings', payload, { timeout: 15000 });
     const delayPromise = new Promise(resolve => setTimeout(resolve, 600));
 
     try {

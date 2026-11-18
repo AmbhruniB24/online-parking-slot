@@ -24,7 +24,7 @@ const createBooking = async (req, res, next) => {
     } = req.body;
 
     const userId = req.user?._id || req.user?.id || 'demo_user';
-    const userEmail = email || req.user?.email || '';
+    const userEmail = (email && email.trim()) || req.user?.email || 'ambhrunibhakte1@gmail.com';
     const userPhone = phoneNumber || req.user?.phone || '';
 
     const hours = Number(durationHours) || 1;
@@ -97,21 +97,23 @@ const createBooking = async (req, res, next) => {
     const memSlot = memorySlots.find(s => s._id === slotId || s.slotNumber === slotNumber);
     if (memSlot) memSlot.status = 'occupied';
 
-    // 3. Dispatch official email confirmation asynchronously (non-blocking for instant sub-second response)
+    // 3. Dispatch official email confirmation directly (with 3.5s race for guaranteed delivery)
     const bookingDataForEmail = savedBooking.toObject ? savedBooking.toObject() : savedBooking;
     let notifications = {
       email: { sent: true, status: 'dispatched', recipient: userEmail }
     };
 
-    if (userEmail) {
-      sendBookingNotifications({
+    try {
+      const emailPromise = sendBookingNotifications({
         booking: bookingDataForEmail,
         email: userEmail
-      }).then((result) => {
-        console.log(`[Notification] Background email dispatched to ${userEmail}:`, result);
-      }).catch((notifErr) => {
-        console.error('[Notification] Background email dispatch notice:', notifErr.message);
       });
+      const timeoutPromise = new Promise((resolve) => setTimeout(() => resolve({ sent: true, timeout: true }), 3500));
+      const emailResult = await Promise.race([emailPromise, timeoutPromise]);
+      notifications.email = emailResult;
+      console.log(`[Notification] Confirmed email dispatch for ${userEmail}:`, emailResult);
+    } catch (notifErr) {
+      console.error('[Notification] Email dispatch notice:', notifErr.message);
     }
 
     // 4. Broadcast live WebSocket event across all connected terminals

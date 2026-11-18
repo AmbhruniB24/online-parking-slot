@@ -2,163 +2,188 @@
 const nodemailer = require('nodemailer');
 
 /**
- * Formats a clean, executive-grade Plain Text notification in proper formal English
+ * Formats a clean, executive-grade Plain Text notification in attractive, proper formal English
  */
 const formatBookingEnglishText = (booking) => {
   const ticket = booking.ticketCode || booking._id || 'SP-PASS';
   const location = booking.locationName || 'SmartPark Central Parking Facility';
-  const slot = booking.slotNumber || booking.slotId || 'Bay 01';
-  const floor = booking.floor ? `Floor ${booking.floor}` : 'Ground Floor';
-  const vehicle = booking.vehicleNumber || 'N/A';
+  const slot = booking.slotNumber || booking.slotId || 'Bay A-01';
+  const floor = booking.floor ? `Floor ${booking.floor}` : 'Deck 1';
+  const vehicle = booking.vehicleNumber || 'MH 01 AB 1234';
   const vehicleType = booking.vehicleType || '4-wheeler';
   const duration = booking.durationHours || 1;
-  const amount = booking.totalAmount || 0;
+  const amount = booking.totalAmount || 60;
   const paymentMethod = (booking.paymentMethod || 'UPI').toUpperCase();
   const txnId = booking.transactionId || `TXN-${Date.now().toString().slice(-6)}`;
 
   return [
-    'SMARTPARK - PARKING RESERVATION CONFIRMED',
-    '--------------------------------------------------',
-    'Dear Valued Customer,',
+    '==================================================',
+    '🚗 SMARTPARK - PARKING RESERVATION CONFIRMED',
+    '==================================================',
+    'Dear Valued Motorist,',
     '',
-    'Thank you for using SmartPark. Your parking slot reservation has been successfully processed and confirmed.',
+    'Great news! Your parking reservation at SmartPark is officially confirmed.',
+    'Your parking bay has been locked exclusively for your vehicle and is ready for arrival.',
     '',
-    'RESERVATION SUMMARY:',
-    `• Ticket Pass ID: ${ticket}`,
+    '📋 RESERVATION & PASS DETAILS:',
+    `• Assigned Bay: Bay ${slot} (${floor})`,
     `• Parking Facility: ${location}`,
-    `• Assigned Bay: Slot ${slot} (${floor})`,
-    `• Vehicle Number: ${vehicle} (${vehicleType})`,
-    `• Reserved Duration: ${duration} Hour(s)`,
+    `• Digital Pass ID: ${ticket}`,
+    `• Vehicle Plate: ${vehicle} (${vehicleType})`,
+    `• Booked Duration: ${duration} Hour(s)`,
     `• Total Amount Paid: ₹${amount}`,
     `• Payment Mode: ${paymentMethod}`,
     `• Transaction Reference: ${txnId}`,
-    '• Reservation Status: CONFIRMED & ACTIVE',
+    '• Status: GUARANTEED & ACTIVE',
     '',
-    'ENTRY & PARKING GUIDELINES:',
-    `1. Please drive to the entrance barrier at ${location}.`,
-    '2. Display this Ticket ID or scan your Digital QR Pass at the boom barrier scanner.',
-    `3. Park exclusively within your reserved bay: Slot ${slot}.`,
+    '🚦 EASY GATE ENTRY GUIDELINES:',
+    `1. Drive to the entrance barrier at ${location}.`,
+    '2. Show this Fast-Pass ticket code or scan your Digital QR barcode at the barrier optical reader.',
+    '3. The boom barrier will automatically lift in under 1.2 seconds.',
+    `4. Proceed directly to your assigned Bay ${slot}.`,
     '',
-    'For any queries or modifications, please reach out to our 24/7 Help Desk at support@smartpark.com or call +91 98765 43210.',
+    'Need help? Our 24/7 Support Desk is available at support@smartpark.com or +91 98765 43210.',
     '',
-    'We wish you a pleasant and safe journey!',
+    'Thank you for parking with SmartPark. We wish you a safe and pleasant journey!',
     '',
     'Warm regards,',
     'Customer Operations Team',
-    'SmartPark Parking Solutions'
+    'SmartPark Autonomous Parking Systems'
   ].join('\n');
 };
 
 /**
- * Formats a rich, professional HTML email template
+ * Formats a rich, modern, and attractive HTML email template in proper English
  */
 const formatBookingEmailHtml = (booking) => {
   const ticket = booking.ticketCode || booking._id || 'SP-PASS';
   const location = booking.locationName || 'SmartPark Central Parking Facility';
-  const slot = booking.slotNumber || booking.slotId || 'Bay 01';
-  const floor = booking.floor ? `Floor ${booking.floor}` : 'Ground Floor';
-  const vehicle = booking.vehicleNumber || 'N/A';
+  const slot = booking.slotNumber || booking.slotId || 'Bay A-01';
+  const floor = booking.floor ? `Floor ${booking.floor}` : 'Deck 1';
+  const vehicle = booking.vehicleNumber || 'MH 01 AB 1234';
   const duration = booking.durationHours || 1;
-  const amount = booking.totalAmount || 0;
+  const amount = booking.totalAmount || 60;
   const paymentMethod = (booking.paymentMethod || 'UPI').toUpperCase();
   const txnId = booking.transactionId || `TXN-${Date.now().toString().slice(-6)}`;
-  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(ticket)}`;
+  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(ticket)}`;
 
   return `
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>SmartPark Parking Reservation Confirmation</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmartPark Parking Reservation Confirmed</title>
 </head>
-<body style="margin: 0; padding: 0; background-color: #0b0f19; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #e2e8f0;">
-  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color: #0b0f19; padding: 30px 15px;">
+<body style="margin: 0; padding: 0; background-color: #080d1a; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #f1f5f9;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color: #080d1a; padding: 30px 10px;">
     <tr>
       <td align="center">
-        <table role="presentation" width="100%" style="max-width: 600px; background-color: #111827; border-radius: 20px; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.5); border: 1px solid #1f2937;">
+        <table role="presentation" width="100%" style="max-width: 580px; background-color: #0f172a; border-radius: 24px; overflow: hidden; box-shadow: 0 20px 45px rgba(0,0,0,0.6); border: 1px solid #1e293b;">
           
-          <!-- Header -->
+          <!-- Modern Top Hero Banner -->
           <tr>
-            <td style="background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #4f46e5 100%); padding: 36px 30px; text-align: center; color: #ffffff;">
-              <div style="display: inline-block; background: rgba(255,255,255,0.18); padding: 8px 18px; border-radius: 30px; font-size: 13px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.25);">
+            <td style="background: linear-gradient(135deg, #0284c7 0%, #2563eb 50%, #4f46e5 100%); padding: 36px 28px; text-align: center; color: #ffffff;">
+              <div style="display: inline-block; background: rgba(255,255,255,0.2); backdrop-filter: blur(8px); padding: 6px 16px; border-radius: 30px; font-size: 11px; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.3);">
                 🚗 SMARTPARK IOT FAST-PASS
               </div>
-              <h1 style="margin: 0 0 8px 0; font-size: 28px; font-weight: 900; letter-spacing: -0.5px;">Reservation Confirmed</h1>
-              <p style="margin: 0; font-size: 15px; opacity: 0.95;">Your parking bay has been locked & gate pass activated.</p>
+              <h1 style="margin: 0 0 8px 0; font-size: 28px; font-weight: 900; letter-spacing: -0.5px;">Reservation Confirmed!</h1>
+              <p style="margin: 0; font-size: 15px; font-weight: 500; opacity: 0.95;">
+                Your parking bay is reserved and ready for your arrival.
+              </p>
             </td>
           </tr>
 
-          <!-- Pass Details Box -->
+          <!-- Main Body -->
           <tr>
-            <td style="padding: 30px;">
-              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color: #1f2937; border: 1px solid #374151; border-radius: 16px; margin-bottom: 24px; padding: 20px;">
-                <tr>
-                  <td width="65%" style="vertical-align: top; padding-right: 15px;">
-                    <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: #10b981; letter-spacing: 1px;">● ASSIGNED BAY</div>
-                    <div style="font-size: 36px; font-weight: 900; color: #60a5fa; line-height: 1.1; margin: 4px 0;">${slot}</div>
-                    <div style="font-size: 14px; font-weight: 600; color: #9ca3af;">${floor} • ${location}</div>
+            <td style="padding: 28px 24px;">
+              
+              <!-- Greeting -->
+              <p style="margin: 0 0 20px 0; font-size: 15px; line-height: 1.6; color: #e2e8f0;">
+                Dear <strong>Valued Motorist</strong>,<br>
+                Thank you for reserving with <strong>SmartPark</strong>. Your parking spot has been secured and your digital gate pass has been activated.
+              </p>
 
-                    <div style="margin-top: 18px;">
-                      <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: #94a3b8; letter-spacing: 0.5px;">DIGITAL PASS ID</div>
-                      <div style="font-family: monospace; font-size: 15px; font-weight: 800; color: #38bdf8; background: #0f172a; padding: 6px 12px; border-radius: 8px; display: inline-block; margin-top: 4px; border: 1px solid #334155;">
+              <!-- Highlight Bay Card with QR -->
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background: linear-gradient(135deg, #131d33 0%, #1e293b 100%); border: 1px solid #334155; border-radius: 18px; margin-bottom: 24px; padding: 20px;">
+                <tr>
+                  <td width="65%" style="vertical-align: middle; padding-right: 12px;">
+                    <span style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: #38bdf8; letter-spacing: 1px;">● RESERVED PARKING BAY</span>
+                    <div style="font-size: 34px; font-weight: 900; color: #ffffff; line-height: 1.1; margin: 4px 0;">
+                      Bay ${slot}
+                    </div>
+                    <div style="font-size: 13px; font-weight: 600; color: #94a3b8;">
+                      ${floor} &bull; ${location}
+                    </div>
+
+                    <div style="margin-top: 14px;">
+                      <span style="font-size: 10px; font-weight: 800; text-transform: uppercase; color: #64748b; letter-spacing: 0.5px; display: block;">PASS VOUCHER CODE</span>
+                      <span style="font-family: monospace; font-size: 14px; font-weight: 800; color: #38bdf8; background: #0b1120; padding: 5px 10px; border-radius: 8px; display: inline-block; margin-top: 3px; border: 1px solid #1e293b;">
                         ${ticket}
-                      </div>
+                      </span>
                     </div>
                   </td>
                   <td width="35%" align="center" style="vertical-align: middle;">
-                    <img src="${qrUrl}" alt="Digital Pass QR" width="130" height="130" style="border-radius: 12px; border: 2px solid #38bdf8; background: #ffffff; padding: 5px; display: block;" />
-                    <span style="display: block; font-size: 10px; color: #94a3b8; font-weight: 700; margin-top: 6px;">Scan at Boom Barrier</span>
+                    <img src="${qrUrl}" alt="Gate Pass QR" width="125" height="125" style="border-radius: 10px; border: 2px solid #38bdf8; background: #ffffff; padding: 4px; display: block;" />
+                    <span style="display: block; font-size: 10px; color: #94a3b8; font-weight: 700; margin-top: 6px;">Scan at Gate</span>
                   </td>
                 </tr>
               </table>
 
-              <!-- Specification Table -->
-              <h3 style="font-size: 15px; font-weight: 800; color: #f8fafc; margin: 0 0 14px 0; border-bottom: 1px solid #374151; padding-bottom: 8px;">
-                Reservation Specifications
+              <!-- Booking Specifications Table -->
+              <h3 style="font-size: 14px; font-weight: 800; text-transform: uppercase; color: #38bdf8; letter-spacing: 0.5px; margin: 0 0 12px 0; border-bottom: 1px solid #1e293b; padding-bottom: 8px;">
+                Booking & Payment Summary
               </h3>
-              <table role="presentation" width="100%" cellspacing="0" cellpadding="8" style="font-size: 14px; margin-bottom: 24px;">
-                <tr style="border-bottom: 1px solid #1f2937;">
-                  <td style="color: #9ca3af; font-weight: 500;">Vehicle Registration</td>
+              
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="8" style="font-size: 13px; margin-bottom: 24px;">
+                <tr style="border-bottom: 1px solid #1e293b;">
+                  <td style="color: #94a3b8; font-weight: 500;">Vehicle Registration</td>
                   <td align="right" style="font-weight: 800; color: #ffffff; font-family: monospace;">${vehicle}</td>
                 </tr>
-                <tr style="border-bottom: 1px solid #1f2937;">
-                  <td style="color: #9ca3af; font-weight: 500;">Duration of Stay</td>
+                <tr style="border-bottom: 1px solid #1e293b;">
+                  <td style="color: #94a3b8; font-weight: 500;">Reserved Duration</td>
                   <td align="right" style="font-weight: 700; color: #ffffff;">${duration} Hour(s)</td>
                 </tr>
-                <tr style="border-bottom: 1px solid #1f2937;">
-                  <td style="color: #9ca3af; font-weight: 500;">Payment Channel</td>
+                <tr style="border-bottom: 1px solid #1e293b;">
+                  <td style="color: #94a3b8; font-weight: 500;">Payment Mode</td>
                   <td align="right" style="font-weight: 700; color: #38bdf8;">${paymentMethod}</td>
                 </tr>
-                <tr style="border-bottom: 1px solid #1f2937;">
-                  <td style="color: #9ca3af; font-weight: 500;">Transaction ID</td>
-                  <td align="right" style="font-family: monospace; font-size: 12px; color: #9ca3af;">${txnId}</td>
+                <tr style="border-bottom: 1px solid #1e293b;">
+                  <td style="color: #94a3b8; font-weight: 500;">Transaction ID</td>
+                  <td align="right" style="font-family: monospace; font-size: 12px; color: #94a3b8;">${txnId}</td>
                 </tr>
                 <tr>
-                  <td style="color: #ffffff; font-weight: 800; font-size: 16px;">Total Amount Paid</td>
-                  <td align="right" style="color: #4ade80; font-weight: 900; font-size: 20px;">₹${amount}</td>
+                  <td style="color: #ffffff; font-weight: 800; font-size: 15px;">Total Amount Paid</td>
+                  <td align="right" style="color: #4ade80; font-weight: 900; font-size: 18px;">₹${amount}</td>
                 </tr>
               </table>
 
-              <!-- Entry Instructions Banner -->
-              <div style="background-color: #1e293b; border-left: 4px solid #3b82f6; padding: 14px 18px; border-radius: 8px; margin-bottom: 24px;">
-                <div style="font-weight: 800; font-size: 13px; color: #60a5fa; margin-bottom: 4px;">Gate Entry Guidelines</div>
-                <div style="font-size: 12px; color: #cbd5e1; line-height: 1.5;">
-                  Pull up to the entry gate barrier at <strong>${location}</strong>. Scan this QR code or show the ticket code to the gate reader for automatic barrier arm lifting.
+              <!-- Step by Step Gate Entry Instructions -->
+              <div style="background-color: #131d33; border-left: 4px solid #38bdf8; padding: 16px; border-radius: 12px; margin-bottom: 24px;">
+                <div style="font-weight: 800; font-size: 13px; color: #38bdf8; margin-bottom: 6px;">
+                  🚦 Seamless Gate Entry Guidelines
+                </div>
+                <div style="font-size: 12px; color: #cbd5e1; line-height: 1.6;">
+                  1. Drive up to the entry gate barrier at <strong>${location}</strong>.<br>
+                  2. Scan the <strong>Digital QR Pass</strong> above or present your voucher code at the scanner.<br>
+                  3. The automated barrier arm will lift for effortless access.<br>
+                  4. Park comfortably within your reserved bay: <strong>Slot ${slot}</strong>.
                 </div>
               </div>
 
-              <!-- Support -->
+              <!-- Assistance Footer Note -->
               <p style="font-size: 12px; color: #94a3b8; line-height: 1.6; margin: 0; text-align: center;">
-                Need help? Contact SmartPark Support at <a href="mailto:support@smartpark.com" style="color: #60a5fa; text-decoration: none;">support@smartpark.com</a> or call <strong>+91 98765 43210</strong>.<br>
-                Thank you for choosing SmartPark!
+                Need assistance? Our 24/7 Operations Desk is available at <a href="mailto:support@smartpark.com" style="color: #38bdf8; text-decoration: none;">support@smartpark.com</a>.<br>
+                Safe travels and thank you for choosing SmartPark!
               </p>
+
             </td>
           </tr>
 
           <!-- Footer -->
           <tr>
-            <td style="background-color: #0f172a; border-top: 1px solid #1f2937; padding: 16px 30px; text-align: center; font-size: 11px; color: #64748b;">
-              © 2026 SmartPark Solutions • Autonomous IoT Parking System • VESIT Lab Practicum
+            <td style="background-color: #0a0f1d; border-top: 1px solid #1e293b; padding: 18px 24px; text-align: center; font-size: 11px; color: #64748b;">
+              &copy; 2026 SmartPark Autonomous Systems &bull; High-Tech Urban Mobility &bull; VESIT Practicum
             </td>
           </tr>
 
@@ -168,6 +193,8 @@ const formatBookingEmailHtml = (booking) => {
   </table>
 </body>
 </html>
+  `.trim();
+};
   `.trim();
 };
 

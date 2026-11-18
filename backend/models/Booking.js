@@ -5,9 +5,8 @@ const mongoose = require('mongoose');
 const bookingSchema = new mongoose.Schema(
   {
     userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      required: true,
-      ref: 'User',
+      type: mongoose.Schema.Types.Mixed,
+      default: 'demo_user',
       index: true
     },
     slotId: {
