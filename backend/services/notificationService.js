@@ -195,8 +195,6 @@ const formatBookingEmailHtml = (booking) => {
 </html>
   `.trim();
 };
-  `.trim();
-};
 
 /**
  * Sends booking confirmation email via Nodemailer Gmail SMTP
